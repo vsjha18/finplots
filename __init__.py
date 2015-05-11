@@ -4,7 +4,9 @@ __author__ = 'vsjha18'
     This modules defines different types of candlestick charts for
      for plotting intraday and historic stock plots.
 """
-
+# import logging
+# log = logging.getLogger('finplots')
+# logging.basicConfig(filename='finplots.log', filemode='w', level=logging.DEBUG)
 class Style(object):
     """ class for containing all the color information """
 
