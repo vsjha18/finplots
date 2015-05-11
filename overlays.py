@@ -3,7 +3,11 @@
     candlestick chart.
 
 """
-from finfunctions import sma, relative_strength_index
+from finfunctions import sma
+from finfunctions import relative_strength_index
+from finfunctions import moving_average_convergence_divergence
+from finfunctions import exponential_moving_average
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
@@ -75,7 +79,7 @@ def plot_rsi(ax, df, style):
                    spine_color=style.spine_color,
                    grid_alpha=style.grid_alpha,
                    grid_color=style.grid_color,
-                   tick_params_color=style.tick_params_color)
+                   tick_color=style.tick_color)
     return ax
 
 
@@ -90,7 +94,7 @@ def _plot_rsi(ax, x, rsi_data,
               spine_color='blue',
               grid_alpha=1,
               grid_color='white',
-              tick_params_color='white'):
+              tick_color='white'):
     """ plot rsi
     :param ax: axis
     :param x: x axis series
@@ -105,7 +109,7 @@ def _plot_rsi(ax, x, rsi_data,
     :param spine_color: spine color
     :param grid_alpha: alpha value for grids
     :param grid_color: color for grids
-    :param tick_params_color: color for ticks
+    :param tick_color: color for ticks
     :return: axis
     """
     ax.plot(x, rsi_data, line_color, linewidth=line_width)
@@ -140,8 +144,8 @@ def _plot_rsi(ax, x, rsi_data,
     ax.spines['right'].set_color(spine_color)
 
     # tick params color
-    ax.tick_params(axis='y', colors=tick_params_color)
-    ax.tick_params(axis='x', colors=tick_params_color)
+    ax.tick_params(axis='y', colors=tick_color)
+    ax.tick_params(axis='x', colors=tick_color)
 
     # plot the grids.
     ax.grid(True, alpha=grid_alpha, color=grid_color)

@@ -9,10 +9,11 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.finance import candlestick_ohlc
-from finplotter.overlays import plot_sma, plot_volume, plot_rsi
-from finplotter import Style
-import matplotlib.ticker as mticker
+from finplots.overlays import plot_sma, plot_volume, plot_rsi
+from finplots.macd import plot_macd
+from finplots import Style
 import matplotlib.dates as mdates
+import matplotlib.ticker as mticker
 from finfunctions import relative_strength_index
 from finfunctions import moving_average_convergence_divergence
 from finfunctions import exponential_moving_average
@@ -68,7 +69,7 @@ def candlestick_plot(df,
     ax1.yaxis.label.set_color(style.label_color)
 
     # tick params color
-    ax1.tick_params(axis='y', colors=style.tick_params_color)
+    ax1.tick_params(axis='y', colors=style.tick_color)
 
 
     # spine colors
@@ -97,7 +98,7 @@ def candlestick_plot(df,
                     spine_color=style.spine_color,
                     color=style.volume_line_color,
                     linewidth=style.volume_line_width,
-                    tick_color=style.tick_params_color)
+                    tick_color=style.tick_color)
 
     ######################################
     ##            RSI Code              ##
@@ -108,7 +109,7 @@ def candlestick_plot(df,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
     rsi_data = relative_strength_index(df.close)
-    from finplotter.overlays import _plot_rsi
+    from finplots.overlays import _plot_rsi
     plot_rsi(ax_rsi, df, style)
 
     ################################
@@ -120,64 +121,70 @@ def candlestick_plot(df,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
 
+    plot_macd(ax3, df, style=style,
+              slow=macd_setup['slow'],
+              fast=macd_setup['fast'],
+              ema=macd_setup['ema'])
+
     nslow = macd_setup['slow']
     nfast = macd_setup['fast']
     nema = macd_setup['ema']
-
-    ema_fast, ema_slow, macd = moving_average_convergence_divergence(df.close)
-    ema9 = exponential_moving_average(macd, nema)
-
-    ax3.plot(df.index, macd, linewidth=2, color='lime')
-    ax3.plot(df.index, ema9, linewidth=2, color='hotpink')
-
-
-
-
-    # FROM HERE
-    # prune the yaxis
-    ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=3, prune='lower'))
-
-    # print text
-    ax3.text(0.015, 0.95, 'MACD 12,26,9', va='top', color='white', transform=ax3.transAxes)
-    # put markers for signal line
-    # following line needs as many stuff as there are markers
-    # hence we have commented this out.
-    # ax_rsi.axes.yaxis.set_ticklabels([30, 70])
-
-    #ax3.set_yticks([])
-
-    # provide the yaxis range
-    #ax3.set_ylim(0, 100)
-
-    # draw horizontal lines
-    # ax3.axhline(70, color=style.rsi_signal_line_color, alpha=style.rsi_signal_line_alpha)
-    # ax3.axhline(50, color=style.rsi_signal_line_color, alpha=style.rsi_signal_line_alpha)
-    #ax3.axhline(0, color='w')
-    # ax3.axhline(30, color=style.rsi_signal_line_color, alpha=style.rsi_signal_line_alpha)
-
-    # fill color
-    div = macd - ema9
-    ax3.fill_between(df.index, div, 0, facecolor='deepskyblue', edgecolor='w', alpha=0.3)
-
-    # ax3.fill_between(df.index, rsi_data, 30, where=(rsi_data<=30), facecolor=style.rsi_oversold_color)
-    # label color
-    ax3.yaxis.label.set_color(style.label_color)
-
-    # spine colors
-    ax3.spines['bottom'].set_color(style.spine_color)
-    ax3.spines['top'].set_color(style.spine_color)
-    ax3.spines['left'].set_color(style.spine_color)
-    ax3.spines['right'].set_color(style.spine_color)
-
-    # tick params color
-    ax3.tick_params(axis='y', colors='w')
-    ax3.tick_params(axis='x', colors='w')
-
-    # plot the grids.
-    ax3.grid(True, alpha=style.grid_alpha, color=style.grid_color)
-    plt.ylabel('MACD', color=style.label_color)
-    plt.setp(ax3.get_xticklabels(), visible=False)
-    # Till here
+    #
+    # ema_fast, ema_slow, macd = moving_average_convergence_divergence(df.close)
+    # ema9 = exponential_moving_average(macd, nema)
+    #
+    # # plot_macd(ax_macd, df, style=style, slow=macd_setup['slow'], fast=macd_setup['fast'], ema=macd_setup['nema'] )
+    # ax3.plot(df.index, macd, linewidth=2, color='lime')
+    # ax3.plot(df.index, ema9, linewidth=2, color='hotpink')
+    #
+    #
+    #
+    #
+    # # FROM HERE
+    # # prune the yaxis
+    # ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=3, prune='lower'))
+    #
+    # # print text
+    # ax3.text(0.015, 0.95, 'MACD 12,26,9', va='top', color='white', transform=ax3.transAxes)
+    # # put markers for signal line
+    # # following line needs as many stuff as there are markers
+    # # hence we have commented this out.
+    # # ax_rsi.axes.yaxis.set_ticklabels([30, 70])
+    #
+    # #ax3.set_yticks([])
+    #
+    # # provide the yaxis range
+    # #ax3.set_ylim(0, 100)
+    #
+    # # draw horizontal lines
+    # # ax3.axhline(70, color=style.rsi_signal_line_color, alpha=style.rsi_signal_line_alpha)
+    # # ax3.axhline(50, color=style.rsi_signal_line_color, alpha=style.rsi_signal_line_alpha)
+    # #ax3.axhline(0, color='w')
+    # # ax3.axhline(30, color=style.rsi_signal_line_color, alpha=style.rsi_signal_line_alpha)
+    #
+    # # fill color
+    # div = macd - ema9
+    # ax3.fill_between(df.index, div, 0, facecolor='deepskyblue', edgecolor='w', alpha=0.3)
+    #
+    # # ax3.fill_between(df.index, rsi_data, 30, where=(rsi_data<=30), facecolor=style.rsi_oversold_color)
+    # # label color
+    # ax3.yaxis.label.set_color(style.label_color)
+    #
+    # # spine colors
+    # ax3.spines['bottom'].set_color(style.spine_color)
+    # ax3.spines['top'].set_color(style.spine_color)
+    # ax3.spines['left'].set_color(style.spine_color)
+    # ax3.spines['right'].set_color(style.spine_color)
+    #
+    # # tick params color
+    # ax3.tick_params(axis='y', colors='w')
+    # ax3.tick_params(axis='x', colors='w')
+    #
+    # # plot the grids.
+    # ax3.grid(True, alpha=style.grid_alpha, color=style.grid_color)
+    # plt.ylabel('MACD', color=style.label_color)
+    # plt.setp(ax3.get_xticklabels(), visible=False)
+    # # Till here
 
 
 
