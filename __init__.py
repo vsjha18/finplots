@@ -33,7 +33,8 @@ class Style(object):
 
         # SMA SETTINGS
         self.sma_linewidth = 1.5
-        self.sma_colors = ['yellow', 'blue', 'red', 'green', 'violet', 'orange', 'indigo']
+        self.sma_colors = ['orange', 'red', 'green', 'violet', 'blue', 'yellow', 'indigo']
+        self.sma_alpha = 1
 
         # RSI SETTINGS
         self.rsi_linewidth = 0.8

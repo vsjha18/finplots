@@ -6,31 +6,25 @@ Created on 05-Apr-2015
 #from . import log
 import pandas as pd
 import numpy as np
+
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.finance import candlestick_ohlc
-from finplots.overlays import plot_sma, plot_volume
-
-from finplots.macd import plot_macd
-from finplots.rsi import plot_rsi
-
-from finplots import Style
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
-from finfunctions import relative_strength_index
-from finfunctions import moving_average_convergence_divergence
-from finfunctions import exponential_moving_average
+from matplotlib.finance import candlestick_ohlc
 
-
-# create a color scheme object
-style = Style()
+from finplots.overlays import plot_sma
+from finplots.overlays import plot_volume
+from finplots.macd import plot_macd
+from finplots.rsi import plot_rsi
+from finplots import style
 
 # global settings
-#plt.style.use('dark_background')
-#plt.style.use('ggplot')
+# plt.style.use('dark_background')
+# plt.style.use('ggplot')
 # changes the fontsize
 matplotlib.rcParams.update({'font.size':10})
-#log.info('testing logger')
+
 def candlestick_plot(df,
                      smas=[26, 5],
                      style=style,
@@ -76,7 +70,6 @@ def candlestick_plot(df,
     # tick params color
     ax1.tick_params(axis='y', colors=style.tick_color)
 
-
     # spine colors
     ax1.spines['bottom'].set_color(style.spine_color)
     ax1.spines['top'].set_color(style.spine_color)
@@ -86,15 +79,11 @@ def candlestick_plot(df,
     # make the x tick label invisible
     plt.setp(ax1.get_xticklabels(), visible=False)
 
-    # MOVING AVERAGES
+    # SIMPLE MOVING AVERAGES
     for idx, period in enumerate(smas):
-        ax1 = plot_sma(df, ax1,
+        ax1 = plot_sma(ax1, df,
                  period=period,
-                 color=style.sma_colors[idx],
-                 linewidth=style.sma_linewidth)
-
-    # display the legend
-    plt.legend(loc=0, fancybox=True)
+                 color=style.sma_colors[idx])
 
     # co-plot the volume data on the same axis
     if 'volume' in df:
@@ -111,7 +100,6 @@ def candlestick_plot(df,
                            colspan=4,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
-    rsi_data = relative_strength_index(df.close)
     plot_rsi(ax_rsi, df, period=rsi_setup['period'])
 
     # MOVING AVERAGE CONVERGENCE DIVERGENCE

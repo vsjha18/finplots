@@ -1,18 +1,30 @@
 """
-    module for plotting all kind of overlays on a
-    candlestick chart.
-
+    This module is for plotting all kinds of overlays,
+    for example SMA, Volume, Bollinger Bands etc. Overlays
+    are plots which doesn't needs a separate axis for being
+    plotted. They are co-plotted on an existing axis just to
+    make the more insight to the main data.
 """
-from finfunctions import sma
-from finfunctions import relative_strength_index
-from finfunctions import moving_average_convergence_divergence
-from finfunctions import exponential_moving_average
-
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+from finfunctions import simple_moving_aveage
+from finplots import style
 
+def plot_sma(ax, df, period, color='cyan', style=style):
+    sma = simple_moving_aveage(df.close, period=period)
+    legend_text = '%s SMA' % str(period)
+    ax = _plot_sma(ax, df.index, sma,
+                   color=color,
+                   line_width=style.sma_linewidth,
+                   alpha=style.sma_alpha,
+                   legend_text=legend_text)
+    return ax
 
-def plot_sma(df, ax, color='cyan', linewidth=1, period=26, label=None, alpha=1):
+def _plot_sma(ax, x, sma,
+              color='cyan',
+              line_width=1,
+              legend_text=None,
+              alpha=1):
     """
     create simple moving average overlay
 
@@ -22,10 +34,9 @@ def plot_sma(df, ax, color='cyan', linewidth=1, period=26, label=None, alpha=1):
     :param style: color scheme object
     :return: axis
     """
-    if label is None:
-        label = str(period) + ' SMA'
-    ma = sma(df['close'], period)
-    ax.plot(df.date[-len(ma):], ma, color, label=label, linewidth=linewidth, alpha=alpha)
+    ax.plot(x[-len(sma):], sma, color, label=legend_text, linewidth=line_width, alpha=alpha)
+    if legend_text is not None:
+        plt.legend(loc=0, fancybox=True)
     return ax
 
 
