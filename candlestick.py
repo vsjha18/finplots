@@ -9,8 +9,11 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.finance import candlestick_ohlc
-from finplots.overlays import plot_sma, plot_volume, plot_rsi
+from finplots.overlays import plot_sma, plot_volume
+
 from finplots.macd import plot_macd
+from finplots.rsi import plot_rsi
+
 from finplots import Style
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
@@ -32,6 +35,7 @@ def candlestick_plot(df,
                      smas=[26, 5],
                      style=style,
                      figsize=(12,8),
+                     rsi_setup = dict(period=14),
                      macd_setup = dict(slow=26, fast=12, ema=9)
                      ):
     """ plot candlestick chart """
@@ -61,6 +65,7 @@ def candlestick_plot(df,
 
     # determines number of points to be displayed on x axis
     ax1.xaxis.set_major_locator(mticker.MaxNLocator(50))
+    ax1.yaxis.set_major_locator(mticker.MaxNLocator(15))
 
     # determines format of markers on the xaxis
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%y'))
@@ -81,7 +86,7 @@ def candlestick_plot(df,
     # make the x tick label invisible
     plt.setp(ax1.get_xticklabels(), visible=False)
 
-    # plot all the simple moving averages
+    # MOVING AVERAGES
     for idx, period in enumerate(smas):
         ax1 = plot_sma(df, ax1,
                  period=period,
@@ -100,28 +105,23 @@ def candlestick_plot(df,
                     linewidth=style.volume_line_width,
                     tick_color=style.tick_color)
 
-    ######################################
-    ##            RSI Code              ##
-    ######################################
+    # RELATIVE STRENGTH INDEX
     ax_rsi = plt.subplot2grid((10,4), (9,0),
                            rowspan=1,
                            colspan=4,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
     rsi_data = relative_strength_index(df.close)
-    from finplots.overlays import _plot_rsi
-    plot_rsi(ax_rsi, df, style)
+    plot_rsi(ax_rsi, df, period=rsi_setup['period'])
 
-    ################################
-    ##          MACD Code         ##
-    ################################
+    # MOVING AVERAGE CONVERGENCE DIVERGENCE
     ax3 = plt.subplot2grid((10,4), (8,0),
                            rowspan=1,
                            colspan=4,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
 
-    plot_macd(ax3, df, style=style,
+    plot_macd(ax3, df,
               slow=macd_setup['slow'],
               fast=macd_setup['fast'],
               ema=macd_setup['ema'])
@@ -197,7 +197,7 @@ def candlestick_plot(df,
     #plt.subplots_adjust(left=0.10, bottom=0.19, right=0.93, top=0.95, wspace=0.20, hspace=0.0)
     plt.subplots_adjust(left=0.07, bottom=0.10, right=0.97, top=0.95, wspace=0.20, hspace=0.0)
 
-    plt.xlabel('Date', color=style.label_color)
+    # plt.xlabel('Date', color=style.label_color)
     plt.suptitle('Stock Price Chart', color=style.label_color)
 
     plt.show()
