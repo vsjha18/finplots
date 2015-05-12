@@ -79,20 +79,17 @@ def candlestick_plot(df,
     # make the x tick label invisible
     plt.setp(ax1.get_xticklabels(), visible=False)
 
-    # SIMPLE MOVING AVERAGES
+    # OVERLAY SIMPLE MOVING AVERAGES
     for idx, period in enumerate(smas):
         ax1 = plot_sma(ax1, df,
                  period=period,
                  color=style.sma_colors[idx])
 
-    # co-plot the volume data on the same axis
+    # OVERLAY VOLUME
+    # it is important to plot volume after the simple moving
+    # average to avoid a warning message 'no labelled objects found'
     if 'volume' in df:
-        plot_volume(df, ax1,
-                    fill_color=style.volume_fill_color,
-                    spine_color=style.spine_color,
-                    color=style.volume_line_color,
-                    linewidth=style.volume_line_width,
-                    tick_color=style.tick_color)
+        plot_volume(ax1, df)
 
     # RELATIVE STRENGTH INDEX
     ax_rsi = plt.subplot2grid((10,4), (9,0),

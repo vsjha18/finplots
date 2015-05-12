@@ -11,7 +11,7 @@ class Style(object):
     """ class for containing all the color information """
 
     def __init__(self):
-        # GLOBAL SETTINGS
+        # GLOBAL STYLES
         self.text_color = 'white'
         self.label_color = 'white'
         self.spine_color = '#5998ff'
@@ -24,19 +24,23 @@ class Style(object):
         self.legend_text_x = 0.015
         self.legend_text_y = 0.95
 
-        # CANDLESTICK SETTINGS
-        self.volume_fill_color = 'cyan'
-        self.volume_line_width = 2
-        self.volume_line_color = 'red'
+        # CANDLESTICK STYLES
         self.cdl_up_color = '#96E309'
         self.cdl_down_color = 'red'
 
-        # SMA SETTINGS
+        # VOLUME OVERLAY STYLES
+        self.volume_fill_color = 'cyan'
+        self.volume_line_width = 2
+        self.volume_line_color = 'red'
+        self.volume_edge_color = 'yellow'
+        self.volume_fill_alpha = 0.5
+
+        # SMA STYLES
         self.sma_linewidth = 1.5
         self.sma_colors = ['orange', 'red', 'green', 'violet', 'blue', 'yellow', 'indigo']
         self.sma_alpha = 1
 
-        # RSI SETTINGS
+        # RSI STYLES
         self.rsi_linewidth = 0.8
         self.rsi_line_color = 'yellow'
         self.rsi_signal_line_color = 'white'
@@ -54,7 +58,7 @@ class Style(object):
         self.rsi_legend_text_x = self.legend_text_x
         self.rsi_legend_text_y = self.legend_text_y
 
-        # MACD SETTINGS
+        # MACD STYLES
         self.macd_line_color = 'blue'
         self.macd_signal_line_color = 'red'
         self.macd_div_fill_color = 'cyan'

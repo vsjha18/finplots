@@ -10,6 +10,7 @@ import matplotlib.ticker as mticker
 from finfunctions import simple_moving_aveage
 from finplots import style
 
+
 def plot_sma(ax, df, period, color='cyan', style=style):
     sma = simple_moving_aveage(df.close, period=period)
     legend_text = '%s SMA' % str(period)
@@ -19,6 +20,7 @@ def plot_sma(ax, df, period, color='cyan', style=style):
                    alpha=style.sma_alpha,
                    legend_text=legend_text)
     return ax
+
 
 def _plot_sma(ax, x, sma,
               color='cyan',
@@ -40,18 +42,37 @@ def _plot_sma(ax, x, sma,
     return ax
 
 
-def plot_volume(df, ax, spine_color='blue', fill_color=None, linewidth=1, color='yellow', tick_color='white'):
+def plot_volume(ax, df, style=style):
+    ax = _plot_volume(ax, df.index, df.volume,
+                      spine_color=style.spine_color,
+                      fill_color=style.volume_fill_color,
+                      fill_alpha=style.volume_fill_alpha,
+                      edge_color=style.volume_edge_color,
+                      line_width=style.volume_line_width,
+                      color=style.volume_line_color,
+                      tick_color=style.tick_color)
+    return ax
+
+def _plot_volume(ax, x, volume,
+                spine_color='blue',
+                fill_color=None,
+                fill_alpha=0.5,
+                edge_color='yellow',
+                line_width=1,
+                color='yellow',
+                tick_color='white'):
     """ overlay volume data on the given axis
     :param df: pandas dataframe containing OHLC data
     :param ax: axis on which it has to be overlayed.
     :return: axis
     """
     axv = ax.twinx()
-    axv.fill_between(df.date, df.volume,
+    axv.fill_between(x, volume,
                      facecolor=fill_color,
-                     alpha=0.5,
-                     linewidth=linewidth,
-                     color=color)
+                     alpha=fill_alpha,
+                     linewidth=line_width,
+                     color=color,
+                     edgecolor=edge_color)
 
     # remove all the tick labels on the y-axis
     axv.axes.yaxis.set_ticklabels([])
@@ -63,7 +84,7 @@ def plot_volume(df, ax, spine_color='blue', fill_color=None, linewidth=1, color=
     axv.spines['right'].set_color(spine_color)
 
     # limit the height pf the plot
-    axv.set_ylim(0, 8 * df.volume.max())
+    axv.set_ylim(0, 8 * volume.max())
     # axv.tick_params(axis='x', colors=style.tick_params_color)
 
     # set tick colors because it gets reset due to twinx
