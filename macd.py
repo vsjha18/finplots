@@ -19,7 +19,9 @@ def plot_macd(ax, df, style=style, slow=26, fast=12, ema=9):
     legend_text = 'MACD %s, %s, %s' % (str(slow), str(fast), str(ema))
     ax = _plot_macd(ax, df.index, macd, ema9,
                     macd_line_color=style.macd_line_color,
+                    macd_line_width=style.macd_line_width,
                     signal_line_color=style.macd_signal_line_color,
+                    signal_line_width=style.macd_signal_line_width,
                     fill_color=style.macd_div_fill_color,
                     edge_color=style.macd_div_edge_color,
                     div_alpha=style.macd_div_alpha,
@@ -38,7 +40,9 @@ def plot_macd(ax, df, style=style, slow=26, fast=12, ema=9):
 
 def _plot_macd(ax, x, macd, ema,
                macd_line_color='yellow',
+               macd_line_width=1.5,
                signal_line_color='lime',
+               signal_line_width=1.5,
                fill_color='cyan',
                edge_color='white',
                div_alpha=0.5,
@@ -54,8 +58,8 @@ def _plot_macd(ax, x, macd, ema,
                ):
 
     # plot_macd(ax_macd, df, style=style, slow=macd_setup['slow'], fast=macd_setup['fast'], ema=macd_setup['nema'] )
-    ax.plot(x, macd, linewidth=2, color=macd_line_color)
-    ax.plot(x, ema, linewidth=2, color=signal_line_color)
+    ax.plot(x, macd, linewidth=macd_line_width, color=macd_line_color)
+    ax.plot(x, ema, linewidth=signal_line_width, color=signal_line_color)
 
 
     ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=3, prune='lower'))

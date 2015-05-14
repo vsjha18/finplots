@@ -23,22 +23,32 @@ class Style(object):
         self.edge_color = 'white'
         self.legend_text_x = 0.015
         self.legend_text_y = 0.95
+        self.fill_color='deepskyblue'
 
         # CANDLESTICK STYLES
         self.cdl_up_color = '#96E309'
         self.cdl_down_color = 'red'
 
         # VOLUME OVERLAY STYLES
-        self.volume_fill_color = 'cyan'
+        self.volume_fill_color = self.fill_color
         self.volume_line_width = 2
         self.volume_line_color = 'red'
-        self.volume_edge_color = 'yellow'
+        self.volume_edge_color = self.fill_color
         self.volume_fill_alpha = 0.5
 
         # SMA STYLES
         self.sma_linewidth = 1.5
         self.sma_colors = ['orange', 'red', 'green', 'violet', 'blue', 'yellow', 'indigo']
         self.sma_alpha = 1
+
+        # BOLLINGER BANDS
+        self.bbands_mid_line_color = 'dodgerblue'
+        self.bbands_mid_line_width = 2
+        self.bbands_fill_color = self.fill_color
+        self.bbands_fill_alpha = 0.3
+        self.bbands_edge_color = 'cyan'
+        self.bbands_edge_line_width = 2
+        self.bbands_text_color = self.text_color
 
         # RSI STYLES
         self.rsi_linewidth = 0.8
@@ -59,10 +69,12 @@ class Style(object):
         self.rsi_legend_text_y = self.legend_text_y
 
         # MACD STYLES
-        self.macd_line_color = 'blue'
-        self.macd_signal_line_color = 'red'
-        self.macd_div_fill_color = 'cyan'
-        self.macd_div_alpha = 1
+        self.macd_line_color = 'orange'
+        self.macd_line_width=1.5
+        self.macd_signal_line_color = 'yellow'
+        self.macd_signal_line_width = 1.5
+        self.macd_div_fill_color = self.fill_color
+        self.macd_div_alpha = 0.5
         self.macd_div_edge_color = self.edge_color
         self.macd_text_color = self.text_color
         self.macd_label_color = self.label_color

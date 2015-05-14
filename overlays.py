@@ -7,12 +7,14 @@
 """
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-from finfunctions import simple_moving_aveage
+from finfunctions import simple_moving_average
+from finfunctions import bollinger_bands
+
 from finplots import style
 
 
 def plot_sma(ax, df, period, color='cyan', style=style):
-    sma = simple_moving_aveage(df.close, period=period)
+    sma = simple_moving_average(df.close, period=period)
     legend_text = '%s SMA' % str(period)
     ax = _plot_sma(ax, df.index, sma,
                    color=color,
@@ -90,5 +92,56 @@ def _plot_volume(ax, x, volume,
     # set tick colors because it gets reset due to twinx
     axv.tick_params(axis='y', colors=tick_color)
     return ax
+
+
+def plot_bollinger_bands(ax, df, period=20):
+    """ plot bollinger bands
+    :param ax: mpl axis on which to plot
+    :param df: dataframe object
+    :param period: period for calculating bollinger bands
+    :return: axis
+    """
+    lower, middle, upper = bollinger_bands(df.close, period=period)
+    ax = _plot_bollinger_bands(ax, df.index, lower, middle, upper,
+                               mid_line_color=style.bbands_mid_line_color,
+                               mid_line_width=style.bbands_mid_line_width,
+                               fill_color=style.bbands_fill_color,
+                               fill_alpha=style.bbands_fill_alpha,
+                               edge_color=style.bbands_edge_color,
+                               edge_line_width=style.bbands_edge_line_width,
+                               text_color=style.bbands_text_color)
+
+    #ax = _plot_bollinger_bands(ax, df.index, lower, middle, upper)
+    return ax
+
+def _plot_bollinger_bands(ax, x, lower, middle, upper,
+                          mid_line_color='red',
+                          mid_line_width=1,
+                          fill_color='cyan',
+                          fill_alpha=0.5,
+                          edge_color='cyan',
+                          edge_line_width=1,
+                          text_color='white'):
+    """
+    :param ax: mpl axis on which it has to be plotted
+    :param prices: prices for which
+    :param period:
+    :param mid_line_color:
+    :param mid_line_width:
+    :param fill_color:
+    :param fill_alpha:
+    :param edge_color:
+    :param edge_line_width:
+    :param text_color:
+    :return:
+    """
+    ax.plot(x[-len(middle):], middle, color=mid_line_color, linewidth=mid_line_width)
+    ax.fill_between(x[-len(middle):], upper, lower,
+                    color=fill_color,
+                    alpha=fill_alpha,
+                    linewidth=edge_line_width,
+                    edgecolor=edge_color)
+    return ax
+
 
 

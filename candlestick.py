@@ -15,6 +15,7 @@ from matplotlib.finance import candlestick_ohlc
 
 from finplots.overlays import plot_sma
 from finplots.overlays import plot_volume
+from finplots.overlays import plot_bollinger_bands
 from finplots.macd import plot_macd
 from finplots.rsi import plot_rsi
 from finplots import style
@@ -26,9 +27,9 @@ from finplots import style
 matplotlib.rcParams.update({'font.size':10})
 
 def candlestick_plot(df,
-                     smas=[26, 5],
+                     smas=[100],
                      style=style,
-                     figsize=(12,8),
+                     figsize=(18,10),
                      rsi_setup = dict(period=14),
                      macd_setup = dict(slow=26, fast=12, ema=9)
                      ):
@@ -49,6 +50,7 @@ def candlestick_plot(df,
     df.date = [mdates.date2num(d) for d in df.date]
 
     df = df[::-1]
+
     payload = df[['date', 'open', 'high', 'low', 'close', 'volume']].values
     candlestick_ohlc(ax1, payload, width=0.5, colorup=style.cdl_up_color, colordown=style.cdl_down_color)
 
@@ -84,6 +86,14 @@ def candlestick_plot(df,
         ax1 = plot_sma(ax1, df,
                  period=period,
                  color=style.sma_colors[idx])
+
+
+    # OVERLAY BOLLINGER BAND
+    # from finfunctions import bollinger_bands
+    # lower, middle, upper = bollinger_bands(df.close)
+    # ax1.plot(df.index[-len(middle):], middle)
+    # ax1.fill_between(df.index[-len(middle):], upper, lower, color='cyan', alpha=0.3, linewidth=2, edgecolor='cyan')
+    ax1 = plot_bollinger_bands(ax1, df, period=20)
 
     # OVERLAY VOLUME
     # it is important to plot volume after the simple moving
