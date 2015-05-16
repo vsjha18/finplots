@@ -27,11 +27,13 @@ from finplots import style
 matplotlib.rcParams.update({'font.size':10})
 
 def candlestick_plot(df,
-                     smas=[100],
+                     smas=[100, 50],
                      style=style,
-                     figsize=(18,10),
+                     figsize=(18, 10),
                      rsi_setup = dict(period=14),
-                     macd_setup = dict(slow=26, fast=12, ema=9)
+                     macd_setup = dict(slow=26, fast=12, ema=9),
+                     bbands_setup = dict(period=20, multiplier=2),
+                     sstoch_setup = dict(period=14, smoothing=3)
                      ):
     """ plot candlestick chart """
 
@@ -39,7 +41,7 @@ def candlestick_plot(df,
 
     # create main axis for charting prices
     ax1 = plt.subplot2grid((10,4), (0,0),
-                           rowspan=8,
+                           rowspan=6,
                            colspan=4,
                            axisbg=style.axis_bg_color)
 
@@ -89,11 +91,7 @@ def candlestick_plot(df,
 
 
     # OVERLAY BOLLINGER BAND
-    # from finfunctions import bollinger_bands
-    # lower, middle, upper = bollinger_bands(df.close)
-    # ax1.plot(df.index[-len(middle):], middle)
-    # ax1.fill_between(df.index[-len(middle):], upper, lower, color='cyan', alpha=0.3, linewidth=2, edgecolor='cyan')
-    ax1 = plot_bollinger_bands(ax1, df, period=20)
+    ax1 = plot_bollinger_bands(ax1, df, period=bbands_setup['period'], multiplier=bbands_setup['multiplier'])
 
     # OVERLAY VOLUME
     # it is important to plot volume after the simple moving
@@ -110,20 +108,31 @@ def candlestick_plot(df,
     plot_rsi(ax_rsi, df, period=rsi_setup['period'])
 
     # MOVING AVERAGE CONVERGENCE DIVERGENCE
-    ax3 = plt.subplot2grid((10,4), (8,0),
+    ax_macd = plt.subplot2grid((10,4), (8,0),
                            rowspan=1,
                            colspan=4,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
 
-    plot_macd(ax3, df,
+    plot_macd(ax_macd, df,
               slow=macd_setup['slow'],
               fast=macd_setup['fast'],
               ema=macd_setup['ema'])
 
-    nslow = macd_setup['slow']
-    nfast = macd_setup['fast']
-    nema = macd_setup['ema']
+    # SLOW STOCHASTIC
+    # create axis for charting prices
+    ax_sstoch = plt.subplot2grid((10,4), (6,0),
+                           rowspan=2,
+                           colspan=4,
+                           sharex=ax1,
+                           axisbg=style.axis_bg_color)
+
+    from finplots.stochastics import plot_slow_stochastic
+    ax_sstoch = plot_slow_stochastic(ax_sstoch, df,
+                                     period=sstoch_setup['period'],
+                                     smoothing=sstoch_setup['smoothing'])
+
+
     #
     # ema_fast, ema_slow, macd = moving_average_convergence_divergence(df.close)
     # ema9 = exponential_moving_average(macd, nema)

@@ -49,6 +49,8 @@ class Style(object):
         self.bbands_edge_color = 'cyan'
         self.bbands_edge_line_width = 2
         self.bbands_text_color = self.text_color
+        self.bbands_legend_text_x = self.legend_text_x
+        self.bbands_legend_text_y = self.legend_text_y
 
         # RSI STYLES
         self.rsi_linewidth = 0.8
@@ -85,6 +87,24 @@ class Style(object):
         self.macd_spine_color = self.spine_color
         self.macd_legend_text_x = self.legend_text_x
         self.macd_legend_text_y = self.legend_text_y
+
+        # SLOW STOCHASTIC
+        self.sstoch_k_line_color = 'dodgerblue'
+        self.sstoch_k_line_width = 1.5
+        self.sstoch_d_line_color = 'orange'
+        self.sstoch_d_line_width = 1.5
+        self.sstoch_text_color = self.text_color
+        self.sstoch_label_color = self.label_color
+        self.sstoch_spine_color = self.spine_color
+        self.sstoch_tick_color = self.tick_color
+        self.sstoch_grid_color = self.grid_color
+        self.sstoch_grid_alpha = self.grid_alpha
+        self.sstoch_spine_color = self.spine_color
+        self.sstoch_legend_text_x = self.legend_text_x
+        self.sstoch_legend_text_y = self.legend_text_y
+        self.sstoch_hline_color = 'white'
+        self.sstoch_hline_width = 1
+        self.sstoch_hline_alpha = 0.2
 
 
 style = Style()

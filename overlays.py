@@ -94,14 +94,15 @@ def _plot_volume(ax, x, volume,
     return ax
 
 
-def plot_bollinger_bands(ax, df, period=20):
+def plot_bollinger_bands(ax, df, period=20, multiplier=2):
     """ plot bollinger bands
     :param ax: mpl axis on which to plot
     :param df: dataframe object
     :param period: period for calculating bollinger bands
     :return: axis
     """
-    lower, middle, upper = bollinger_bands(df.close, period=period)
+    lower, middle, upper = bollinger_bands(df.close, period=period, multiplier=multiplier)
+    legend_text = 'Bollinger Bands (%s, %s)' % (str(period), str(multiplier))
     ax = _plot_bollinger_bands(ax, df.index, lower, middle, upper,
                                mid_line_color=style.bbands_mid_line_color,
                                mid_line_width=style.bbands_mid_line_width,
@@ -109,7 +110,10 @@ def plot_bollinger_bands(ax, df, period=20):
                                fill_alpha=style.bbands_fill_alpha,
                                edge_color=style.bbands_edge_color,
                                edge_line_width=style.bbands_edge_line_width,
-                               text_color=style.bbands_text_color)
+                               text_color=style.bbands_text_color,
+                               legend_text=legend_text,
+                               legend_text_x=style.bbands_legend_text_x,
+                               legend_text_y=style.bbands_legend_text_y)
 
     #ax = _plot_bollinger_bands(ax, df.index, lower, middle, upper)
     return ax
@@ -121,7 +125,10 @@ def _plot_bollinger_bands(ax, x, lower, middle, upper,
                           fill_alpha=0.5,
                           edge_color='cyan',
                           edge_line_width=1,
-                          text_color='white'):
+                          text_color='white',
+                          legend_text=None,
+                          legend_text_x=0.015,
+                          legend_text_y=0.95):
     """
     :param ax: mpl axis on which it has to be plotted
     :param prices: prices for which
@@ -141,6 +148,12 @@ def _plot_bollinger_bands(ax, x, lower, middle, upper,
                     alpha=fill_alpha,
                     linewidth=edge_line_width,
                     edgecolor=edge_color)
+    if legend_text is not None:
+        ax.text(legend_text_x, legend_text_y, legend_text,
+                    va='top',
+                    color=text_color,
+                    transform=ax.transAxes)
+
     return ax
 
 
