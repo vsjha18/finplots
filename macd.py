@@ -87,9 +87,13 @@ def _plot_macd(ax, x, macd, ema,
     ax.tick_params(axis='y', colors=tick_color)
     ax.tick_params(axis='x', colors=tick_color)
 
+    # show tick params on right axis as well
+    ax.tick_params(labelright=True)
+
     # plot the grids.
     ax.grid(True, alpha=grid_alpha, color=grid_color)
     plt.ylabel('MACD', color=label_color)
     plt.setp(ax.get_xticklabels(), visible=False)
+
     return ax
 

@@ -94,20 +94,7 @@ def _plot_slow_stochastic(ax, x, k, d,
     ax.axhline(50, color=hline_color, alpha=hline_alpha, linewidth=hline_width)
     ax.axhline(20, color=hline_color, alpha=hline_alpha, linewidth=hline_width)
 
-    # # fill color
-    # ax.fill_between(x, rsi_data, 70,
-    #                 where=(rsi_data >= 70),
-    #                 facecolor=overbought_color,
-    #                 edgecolor=edge_color,
-    #                 alpha=fill_alpha)
-    #
-    # ax.fill_between(x, rsi_data, 30,
-    #                 where=(rsi_data <= 30),
-    #                 facecolor=oversold_color,
-    #                 edgecolor=edge_color,
-    #                 alpha=fill_alpha)
-
-    # write text as legend for macd setup
+    # write text as legend
     if legend_text is not None:
         ax.text(legend_text_x, legend_text_y, legend_text,
                 va='top',
@@ -126,6 +113,9 @@ def _plot_slow_stochastic(ax, x, k, d,
     # tick params color
     ax.tick_params(axis='y', colors=tick_color)
     ax.tick_params(axis='x', colors=tick_color)
+
+    # show tick params on right axis as well
+    ax.tick_params(labelright=True)
 
     # plot the grids.
     ax.grid(True, alpha=grid_alpha, color=grid_color)

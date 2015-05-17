@@ -16,8 +16,11 @@ from matplotlib.finance import candlestick_ohlc
 from finplots.overlays import plot_sma
 from finplots.overlays import plot_volume
 from finplots.overlays import plot_bollinger_bands
+
 from finplots.macd import plot_macd
 from finplots.rsi import plot_rsi
+from finplots.stochastics import plot_slow_stochastic
+
 from finplots import style
 
 # global settings
@@ -27,11 +30,11 @@ from finplots import style
 matplotlib.rcParams.update({'font.size':10})
 
 def candlestick_plot(df,
-                     smas=[100, 50],
+                     smas=[100, 50, 5 , 10],
                      style=style,
                      figsize=(18, 10),
                      rsi_setup = dict(period=14),
-                     macd_setup = dict(slow=26, fast=12, ema=9),
+                     macd_setup = dict(slow=26, fast=12, ema=8),
                      bbands_setup = dict(period=20, multiplier=2),
                      sstoch_setup = dict(period=14, smoothing=3)
                      ):
@@ -86,9 +89,8 @@ def candlestick_plot(df,
     # OVERLAY SIMPLE MOVING AVERAGES
     for idx, period in enumerate(smas):
         ax1 = plot_sma(ax1, df,
-                 period=period,
-                 color=style.sma_colors[idx])
-
+                       period=period,
+                       color=style.sma_colors[idx])
 
     # OVERLAY BOLLINGER BAND
     ax1 = plot_bollinger_bands(ax1, df, period=bbands_setup['period'], multiplier=bbands_setup['multiplier'])
@@ -97,7 +99,10 @@ def candlestick_plot(df,
     # it is important to plot volume after the simple moving
     # average to avoid a warning message 'no labelled objects found'
     if 'volume' in df:
-        plot_volume(ax1, df)
+        ax1 = plot_volume(ax1, df)
+
+    # show tick params on right axis as well
+    ax1.tick_params(labelright=True)
 
     # RELATIVE STRENGTH INDEX
     ax_rsi = plt.subplot2grid((10,4), (9,0),
@@ -114,10 +119,10 @@ def candlestick_plot(df,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
 
-    plot_macd(ax_macd, df,
-              slow=macd_setup['slow'],
-              fast=macd_setup['fast'],
-              ema=macd_setup['ema'])
+    ax_macd = plot_macd(ax_macd, df,
+                        slow=macd_setup['slow'],
+                        fast=macd_setup['fast'],
+                        ema=macd_setup['ema'])
 
     # SLOW STOCHASTIC
     # create axis for charting prices
@@ -127,11 +132,9 @@ def candlestick_plot(df,
                            sharex=ax1,
                            axisbg=style.axis_bg_color)
 
-    from finplots.stochastics import plot_slow_stochastic
     ax_sstoch = plot_slow_stochastic(ax_sstoch, df,
                                      period=sstoch_setup['period'],
                                      smoothing=sstoch_setup['smoothing'])
-
 
     #
     # ema_fast, ema_slow, macd = moving_average_convergence_divergence(df.close)
